@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CropperJS Testing</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css" integrity="sha512-087vysR/jM0N5cp13Vlp+ZF9wx6tKbvJLwPO8Iit6J7R+n7uIMMjg37dEgexOshDmDITHYY5useeSmfD1MYiQA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main>
+        <div class="pageWrapper">
+            <div class="container">
+                <div class="cropper-container cropper-bg" touch-action="none" style="width: 825px; height: 497px;">
+                    <div class="cropper-wrap-box">
+                        <div class="cropper-canvas" style="width: 825px; height: 464.062px; transform: translateY(16.4688px);">
+                            <img src="https://fengyuanchen.github.io/jquery-cropper/images/picture.jpg" alt="Picture" class="" style="width: 825px; height: 464.062px; transform: none;">
+                        </div>
+                    </div>
+                    <div class="cropper-drag-box cropper-crop cropper-modal" data-cropper-action="crop"></div>
+                    <div class="cropper-crop-box" style="width: 660px; height: 371.25px; transform: translateX(82.5px) translateY(62.875px);">
+                        <span class="cropper-view-box"><img src="https://fengyuanchen.github.io/jquery-cropper/images/picture.jpg" alt="Picture" style="width: 825px; height: 464.062px; transform: translateX(-82.5px) translateY(-46.4062px);"></span>
+                        <span class="cropper-dashed dashed-h"></span>
+                        <span class="cropper-dashed dashed-v"></span>
+                        <span class="cropper-center"></span>
+                        <span class="cropper-face cropper-move" data-cropper-action="all"></span>
+                        <span class="cropper-line line-e" data-cropper-action="e"></span>
+                        <span class="cropper-line line-n" data-cropper-action="n"></span>
+                        <span class="cropper-line line-w" data-cropper-action="w"></span>
+                        <span class="cropper-line line-s" data-cropper-action="s"></span>
+                        <span class="cropper-point point-e" data-cropper-action="e"></span>
+                        <span class="cropper-point point-n" data-cropper-action="n"></span>
+                        <span class="cropper-point point-w" data-cropper-action="w"></span>
+                        <span class="cropper-point point-s" data-cropper-action="s"></span>
+                        <span class="cropper-point point-ne" data-cropper-action="ne"></span>
+                        <span class="cropper-point point-nw" data-cropper-action="nw"></span>
+                        <span class="cropper-point point-sw" data-cropper-action="sw"></span>
+                        <span class="cropper-point point-se" data-cropper-action="se"></span>
+                    </div>
+                </div>
+            </div>
+            <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file">
+                <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
+                <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title="Import image with Blob URLs">
+              <span class="fa fa-upload"></span>
+            </span>
+            </label>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.js" integrity="sha512-lR8d1BXfYQuiqoM/LeGFVtxFyspzWFTZNyYIiE5O2CcAGtTCRRUMLloxATRuLz8EmR2fYqdXYlrGh+D6TVGp3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cropper/1.0.1/jquery-cropper.js" integrity="sha512-7H4tikIFoyAdYD31w/uNYvvAUL6gyunWXLwTQ7ZXkyjD+brw+PfJpLxFkANnbkKnSJzU89YpnF3fJKbpvV+QYg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

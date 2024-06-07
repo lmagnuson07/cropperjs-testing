@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    height: 100vh;
+    width: 100vw;
+}
+
+.pageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.container {
+    width: 1200px;
+    height: calc(100vh - 200px);
+    position: relative;
+    border: 1px solid #000;
+}
