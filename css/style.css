@@ -33,3 +33,11 @@ main {
     width: 350px;
     height: 120px;
 }
+
+.cropper-console * {
+    font-size: 12px;
+}
+
+span.fa.large {
+    font-size: 125%;
+}
