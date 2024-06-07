@@ -10,6 +10,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileError = $file['error'];
         $fileType = $file['type'];
 
+        // Ensure the 'temp/' directory exists
+        $tempDir = '../temp/';
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
+        // Move the uploaded file to the temp directory
+        $tempFileName = uniqid('temp_', true) . '.png';
+        $tempFileDestination = $tempDir . $tempFileName;
+        if (!move_uploaded_file($fileTmpName, $tempFileDestination)) {
+            echo "Failed to move file to temp directory";
+            return;
+        }
+
         // Ensure the 'uploads/' directory exists
         $uploadDir = '../uploads/';
         if (!is_dir($uploadDir)) {
@@ -21,11 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Change the file extension to .png
         $fileName = uniqid('cropped_', true) . '.png';
         $fileDestination = $uploadDir . $fileName;
-        if (move_uploaded_file($fileTmpName, $fileDestination)) {
-            echo "File uploaded successfully";
-        } else {
-            echo "Failed to upload file";
+
+        // Scale the image to 350px width while preserving the aspect ratio
+        try {
+            $image = new Imagick($tempFileDestination);
+            $image->scaleImage(350, 0);
+            $image->writeImage($fileDestination);
+            echo "File resized successfully";
+        } catch (ImagickException $e) {
+            echo "Failed to resize file";
         }
+
+        // Delete the temp file
+        unlink($tempFileDestination);
+
     } else {
         echo "No file uploaded";
     }
