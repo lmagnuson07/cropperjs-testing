@@ -7,6 +7,7 @@ $(document).ready(function() {
     let $inputImage = $('#inputImage');
     let $image = $('#image');
     let originalImageURL = $image.attr('src')
+    let uploaded = false;
 
     var options = {
         dragMode: 'move',
@@ -21,8 +22,8 @@ $(document).ready(function() {
         // minCanvasWidth: 350,
         // minCanvasHeight: 120,
 
-        // minCropBoxWidth: 160,
-        // minCropBoxHeight: 90,
+        // minCropBoxWidth: 350,
+        // minCropBoxHeight: 120,
         // minContainerWidth: 320,
         // minContainerHeight: 180,
         /////////////////////////////
@@ -42,10 +43,16 @@ $(document).ready(function() {
         // modal: false,
         ///////// Removes the checkered image.
         // background: false,
+    };
 
-        ///////// Callbacks (can go in on method) ///////
+    // Cropper
+    $image.on({
         ///////// Callbacks used with a fixed cropbox ///
         ready: function (e) {
+            // Disable until image is uploaded
+            if (!uploaded) {
+                $image.cropper('disable');
+            }
             console.log(e.type);
         },
         // cropmove: function (e) {
@@ -61,31 +68,7 @@ $(document).ready(function() {
             console.log(e.type, e.detail.ratio);
             console.log(e.detail);
         }
-    };
-
-    // Cropper
-    // $image.on({
-    //     ready: function (e) {
-    //         console.log(e.type);
-    //     },
-    //     cropstart: function (e) {
-    //         console.log(e.type, e.detail.action);
-    //     },
-    //     cropmove: function (e) {
-    //
-    //     },
-    //     cropend: function (e) {
-    //         console.log(e.type, e.detail.action);
-    //     },
-    //     crop: function (e) {
-    //         console.log(e.type);
-    //     },
-    //     zoom: function (e) {
-    //         console.log(e.type, e.detail.ratio);
-    //     }
-    // }).cropper(options);
-    $image.cropper(options);
-
+    }).cropper(options);
     // console.log($image);
 
     // Methods (control events)
@@ -119,12 +102,12 @@ $(document).ready(function() {
             cropped = cropper.cropped;
 
             switch (data.method) {
-                // case 'rotate':
-                //     if (cropped && options.viewMode > 0) {
-                //         $image.cropper('clear');
-                //     }
-                //
-                //     break;
+                case 'rotate':
+                    if (cropped && options.viewMode > 0) {
+                        $image.cropper('clear');
+                    }
+
+                    break;
 
                 case 'getCroppedCanvas':
                     // Check for file types.
@@ -194,44 +177,53 @@ $(document).ready(function() {
                     });
 
                     break;
+
+                case 'moveTo':
+                    if (!data.option) {
+                        data.option = {};
+                    }
+
+                    // Get the crop box data and the canvas data
+                    let cropBoxData = $image.cropper('getCropBoxData');
+                    let canvasData = $image.cropper('getCanvasData');
+
+                    // Calculate the center point of the crop box
+                    let centerX = cropBoxData.left + cropBoxData.width / 2;
+                    let centerY = cropBoxData.top + cropBoxData.height / 2;
+
+                    // Calculate the center point
+                    data.option = centerX - canvasData.width / 2;
+                    data.secondOption = centerY - canvasData.height / 2;
+                    break;
             }
 
             result = $image.cropper(data.method, data.option, data.secondOption);
 
             switch (data.method) {
-            //     case 'rotate':
-            //         if (cropped && options.viewMode > 0) {
-            //             $image.cropper('crop');
-            //         }
-            //
-            //         break;
-            //
-            //     case 'scaleX':
-            //     case 'scaleY':
-            //         $(this).data('option', -data.option);
-            //         break;
-            //
+                case 'rotate':
+                    if (cropped && options.viewMode > 0) {
+                        $image.cropper('crop');
+                    }
+
+                    break;
+
+                case 'scaleX':
+                case 'scaleY':
+                    $(this).data('option', -data.option);
+                    break;
+
                 case 'getCroppedCanvas':
                     if (result) {
                         // Bootstrap's Modal
                         $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
 
-                        // if (!$download.hasClass('disabled')) {
-                        //     download.download = uploadedImageName;
-                        //     $download.attr('href', result.toDataURL(uploadedImageType));
-                        // }
+                        if (!$download.hasClass('disabled')) {
+                            download.download = uploadedImageName;
+                            $download.attr('href', result.toDataURL(uploadedImageType));
+                        }
                     }
 
                     break;
-            //
-            //     case 'destroy':
-            //         if (uploadedImageURL) {
-            //             URL.revokeObjectURL(uploadedImageURL);
-            //             uploadedImageURL = '';
-            //             $image.attr('src', originalImageURL);
-            //         }
-            //
-            //         break;
             }
 
             if ($.isPlainObject(result) && $target) {
@@ -271,6 +263,7 @@ $(document).ready(function() {
                     uploadedImageURL = URL.createObjectURL(file);
                     $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
                     $inputImage.val('');
+                    uploaded = true;
                 } else if (file.type === 'application/postscript') {
                     console.log("Do separate Ajax call to convert EPS file");
                 } else {
