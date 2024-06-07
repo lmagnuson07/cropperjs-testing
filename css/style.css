@@ -14,13 +14,12 @@ main {
     align-items: center;
     position: relative;
     flex-direction: column;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
 }
 
-.container {
+.my-container {
     width: 1200px;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 60px);
     position: relative;
     border: 1px solid #000;
 }
