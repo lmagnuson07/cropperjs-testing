@@ -6,7 +6,7 @@ $(document).ready(function() {
     let uploadedImageType;
     let $inputImage = $('#inputImage');
     let $image = $('#image');
-    let originalImageURL = $image.attr('src')
+    var $download = $('#download');
     let uploaded = false;
 
     var options = {
@@ -71,7 +71,17 @@ $(document).ready(function() {
     }).cropper(options);
     // console.log($image);
 
-    // Methods (control events)
+    if (typeof document.createElement('cropper').style.transition === 'undefined') {
+        $('button[data-method="rotate"]').prop('disabled', true);
+        $('button[data-method="scale"]').prop('disabled', true);
+    }
+
+    // Download
+    if (typeof $download[0].download === 'undefined') {
+        $download.addClass('disabled');
+    }
+
+    // Methods (control events for buttons)
     $('.cropper-console').on('click', '[data-method]', function () {
         var $this = $(this);
         var data = $this.data();
@@ -98,7 +108,7 @@ $(document).ready(function() {
                     }
                 }
             }
-            console.log(data);
+            // console.log(data);
             cropped = cropper.cropped;
 
             switch (data.method) {
@@ -161,13 +171,13 @@ $(document).ready(function() {
                         // Pass the image file name as the third parameter if necessary.
                         formData.append('croppedImage', blob/*, 'example.png' */);
 
-                        // Use `jQuery.ajax` method for example
                         $.ajax('/api/processCroppedImage.php', {
                             method: 'POST',
                             data: formData,
                             processData: false,
                             contentType: false,
                             success() {
+                                // Need to replace uploadedImageName and uploadedImageType variables after processing image for download.
                                 console.log('Upload success');
                             },
                             error() {
@@ -218,6 +228,8 @@ $(document).ready(function() {
                         $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
 
                         if (!$download.hasClass('disabled')) {
+                            // console.log(uploadedImageName);
+                            // console.log(result.toDataURL(uploadedImageType));
                             download.download = uploadedImageName;
                             $download.attr('href', result.toDataURL(uploadedImageType));
                         }
@@ -248,7 +260,7 @@ $(document).ready(function() {
 
             if (files && files.length) {
                 file = files[0];
-                console.log(file);
+
                 if (/^image\/\w+$/.test(file.type)) {
                     uploadedImageName = file.name;
                     uploadedImageType = file.type;
@@ -264,8 +276,30 @@ $(document).ready(function() {
                     $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
                     $inputImage.val('');
                     uploaded = true;
+
                 } else if (file.type === 'application/postscript') {
-                    console.log("Do separate Ajax call to convert EPS file");
+                    uploadedImageURL = URL.createObjectURL(file);
+
+                    let formData = new FormData();
+                    formData.append('method', 'convertEPS');
+                    formData.append('file', uploadedImageURL);
+
+                    // console.log("Do separate Ajax call to convert EPS file");
+                    // console.log(file);
+                    // Could fetch image data and pass that.
+                    $.ajax('/api/processCroppedImage.php', {
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success() {
+                            // Need to replace uploadedImageName and uploadedImageType variables after processing image for download.
+                            console.log('EPS Upload success');
+                        },
+                        error() {
+                            console.log('Upload error');
+                        },
+                    });
                 } else {
                     window.alert('Please choose an image file.');
                 }

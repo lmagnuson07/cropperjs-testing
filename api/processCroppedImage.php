@@ -1,7 +1,21 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check if file was uploaded
+    echo "<pre>";
+    var_dump($_FILES);
+    echo "</pre>";
+    die();
     if (isset($_FILES['croppedImage'])) {
+        if ($_POST['method'] == 'processEps') {
+            // Convert EPS to png.
+
+        } else if ($_POST['method'] == 'processTif') {
+            // Convert TIF to png.
+
+        } else {
+
+        }
+
         $file = $_FILES['croppedImage'];
 
         // You can now access details about the file
