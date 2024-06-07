@@ -12,14 +12,55 @@ $(document).ready(function() {
         dragMode: 'move',
         aspectRatio: 350 / 120,
         autoCropArea: 0.85,
+        // wheelZoomRation: 0.05,
         restore: false,
         guides: false,
-        center: false,
-        highlight: false,
+
+        //////// Sizes //////////////
+        ///// Prevents zooming out all the way (probably don't want this) /////
+        // minCanvasWidth: 350,
+        // minCanvasHeight: 120,
+
+        // minCropBoxWidth: 160,
+        // minCropBoxHeight: 90,
+        // minContainerWidth: 320,
+        // minContainerHeight: 180,
+        /////////////////////////////
+
+        // center: false, // crosshair
+        // highlight: false, // makes croparea more obvious
+
+        ////// Fixed Cropbox //////////////
         cropBoxMovable: false,
         cropBoxResizable: false,
         toggleDragModeOnDblclick: false,
+        /////////////////////////////////
+
         preview: '.img-preview',
+
+        ///////// Makes the background checkered image less dark
+        // modal: false,
+        ///////// Removes the checkered image.
+        // background: false,
+
+        ///////// Callbacks (can go in on method) ///////
+        ///////// Callbacks used with a fixed cropbox ///
+        ready: function (e) {
+            console.log(e.type);
+        },
+        // cropmove: function (e) {
+        //     console.log(e.type, e.detail.action)
+        //     console.log(e.detail);
+        // },
+        crop: function (e) {
+            console.log(e.type);
+            console.log(e.detail);
+        },
+        zoom: function (e) {
+            // Can compare e.detail.oldRatio and e.detail.ratio to see if zooming in or out.
+            console.log(e.type, e.detail.ratio);
+            console.log(e.detail);
+        }
     };
 
     // Cropper
@@ -94,11 +135,41 @@ $(document).ready(function() {
                     if (!data.option) {
                         data.option = {};
                     }
+/*
+
+                    /////////// Data fetching ////////////////
+                    let getdata = $image.cropper('getData');
+                    // Output the final cropped area position and size data (based on the natural size of the original image).
+                    // x and y are based off the top left corner.
+                    console.log("getdata");
+                    console.log(getdata);
+
+                    let getContainerData = $image.cropper('getContainerData');
+                    // Just the width and height of the container set in CSS.
+                    console.log("getContainerData");
+                    console.log(getContainerData);
+
+                    let getImageData = $image.cropper('getImageData');
+                    // Data of image before cropping.
+                    console.log("getImageData");
+                    console.log(getImageData);
+
+                    let getCanvasData = $image.cropper('getCanvasData');
+                    // Output the canvas (image wrapper) position and size data.
+                    console.log("getCanvasData");
+                    console.log(getCanvasData);
+
+                    let getCropBoxData = $image.cropper('getCropBoxData');
+                    // Output the crop box position and size data.
+                    console.log("getCropBoxData");
+                    console.log(getCropBoxData);
+                    ////////////////////////////////////////
+*/
 
                     $image.cropper('getCroppedCanvas', {
                         // width: 350,
                         // height: 120,
-                        fillColor: '#fff',
+                        // fillColor: '#fff',
                         imageSmoothingEnabled: true,
                         imageSmoothingQuality: 'high',
                     }).toBlob((blob) => {
@@ -114,10 +185,10 @@ $(document).ready(function() {
                             processData: false,
                             contentType: false,
                             success() {
-                                alert('Upload success');
+                                console.log('Upload success');
                             },
                             error() {
-                                alert('Upload error');
+                                console.log('Upload error');
                             },
                         });
                     });
@@ -185,10 +256,14 @@ $(document).ready(function() {
 
             if (files && files.length) {
                 file = files[0];
-
+                console.log(file);
                 if (/^image\/\w+$/.test(file.type)) {
                     uploadedImageName = file.name;
                     uploadedImageType = file.type;
+
+                    if (uploadedImageType === 'image/tiff') {
+                        console.log("Do separate Ajax call to convert TIFF file");
+                    }
 
                     if (uploadedImageURL) {
                         URL.revokeObjectURL(uploadedImageURL);
@@ -196,6 +271,8 @@ $(document).ready(function() {
                     uploadedImageURL = URL.createObjectURL(file);
                     $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
                     $inputImage.val('');
+                } else if (file.type === 'application/postscript') {
+                    console.log("Do separate Ajax call to convert EPS file");
                 } else {
                     window.alert('Please choose an image file.');
                 }
