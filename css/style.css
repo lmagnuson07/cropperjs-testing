@@ -18,8 +18,18 @@ main {
 }
 
 .my-container {
-    width: 1200px;
-    height: calc(100vh - 60px);
+    width: 600px;
+    height: 350px;
     position: relative;
     border: 1px solid #000;
+}
+
+.img-preview {
+    overflow: hidden;
+}
+
+.preview-container {
+    border: 1px solid #000;
+    width: 350px;
+    height: 120px;
 }

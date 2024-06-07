@@ -10,10 +10,17 @@ $(document).ready(function() {
     let $image = $('#image');
 
     var options = {
-        // aspectRatio: 16 / 9,
-        // preview: '.img-preview',
-        // crop: function (e) {
-        // }
+        dragMode: 'move',
+        aspectRatio: 350 / 120,
+        autoCropArea: 0.85,
+        restore: false,
+        guides: false,
+        center: false,
+        highlight: false,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+        preview: '.img-preview',
     };
 
     // Cropper
@@ -25,7 +32,7 @@ $(document).ready(function() {
             console.log(e.type, e.detail.action);
         },
         cropmove: function (e) {
-            console.log(e.type, e.detail.action);
+
         },
         cropend: function (e) {
             console.log(e.type, e.detail.action);
