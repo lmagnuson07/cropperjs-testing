@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /c/GitHub/cropperjs-testing:/var/www/html
+    ports:
+      - 8080:80

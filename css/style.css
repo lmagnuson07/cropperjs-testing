@@ -18,8 +18,8 @@ main {
 }
 
 .my-container {
-    width: 600px;
-    height: 350px;
+    width: 750px;
+    height: 450px;
     position: relative;
     border: 1px solid #000;
 }
@@ -41,3 +41,8 @@ main {
 span.fa.large {
     font-size: 125%;
 }
+
+.cropper-console .modal-body > img, .docs-cropped .modal-body > canvas {
+    max-width: 100%;
+}
+

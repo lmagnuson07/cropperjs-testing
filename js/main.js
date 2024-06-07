@@ -1,7 +1,5 @@
-// // initialize jquery-cropperjs
 $(document).ready(function() {
 // Import image
-    const console = window.console || { log: function () {} };
     const URL = window.URL || window.webkitURL;
     let uploadedImageName;
     let uploadedImageURL;
@@ -25,30 +23,31 @@ $(document).ready(function() {
     };
 
     // Cropper
-    $image.on({
-        ready: function (e) {
-            console.log(e.type);
-        },
-        cropstart: function (e) {
-            console.log(e.type, e.detail.action);
-        },
-        cropmove: function (e) {
+    // $image.on({
+    //     ready: function (e) {
+    //         console.log(e.type);
+    //     },
+    //     cropstart: function (e) {
+    //         console.log(e.type, e.detail.action);
+    //     },
+    //     cropmove: function (e) {
+    //
+    //     },
+    //     cropend: function (e) {
+    //         console.log(e.type, e.detail.action);
+    //     },
+    //     crop: function (e) {
+    //         console.log(e.type);
+    //     },
+    //     zoom: function (e) {
+    //         console.log(e.type, e.detail.ratio);
+    //     }
+    // }).cropper(options);
+    $image.cropper(options);
 
-        },
-        cropend: function (e) {
-            console.log(e.type, e.detail.action);
-        },
-        crop: function (e) {
-            console.log(e.type);
-        },
-        zoom: function (e) {
-            console.log(e.type, e.detail.ratio);
-        }
-    }).cropper(options);
+    // console.log($image);
 
-    console.log($image);
-
-    // Methods
+    // Methods (control events)
     $('.cropper-console').on('click', '[data-method]', function () {
         var $this = $(this);
         var data = $this.data();
@@ -76,31 +75,59 @@ $(document).ready(function() {
                 }
             }
             console.log(data);
-            // cropped = cropper.cropped;
-            //
-            // switch (data.method) {
-            //     case 'rotate':
-            //         if (cropped && options.viewMode > 0) {
-            //             $image.cropper('clear');
-            //         }
-            //
-            //         break;
-            //
-            //     case 'getCroppedCanvas':
-            //         if (uploadedImageType === 'image/jpeg') {
-            //             if (!data.option) {
-            //                 data.option = {};
-            //             }
-            //
-            //             data.option.fillColor = '#fff';
-            //         }
-            //
-            //         break;
-            // }
+            cropped = cropper.cropped;
+
+            switch (data.method) {
+                // case 'rotate':
+                //     if (cropped && options.viewMode > 0) {
+                //         $image.cropper('clear');
+                //     }
+                //
+                //     break;
+
+                case 'getCroppedCanvas':
+                    // Check for file types.
+                    if (uploadedImageType === 'image/jpeg') {
+
+                    }
+
+                    if (!data.option) {
+                        data.option = {};
+                    }
+
+                    $image.cropper('getCroppedCanvas', {
+                        // width: 350,
+                        // height: 120,
+                        fillColor: '#fff',
+                        imageSmoothingEnabled: true,
+                        imageSmoothingQuality: 'high',
+                    }).toBlob((blob) => {
+                        const formData = new FormData();
+
+                        // Pass the image file name as the third parameter if necessary.
+                        formData.append('croppedImage', blob/*, 'example.png' */);
+
+                        // Use `jQuery.ajax` method for example
+                        $.ajax('/api/processCroppedImage.php', {
+                            method: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success() {
+                                alert('Upload success');
+                            },
+                            error() {
+                                alert('Upload error');
+                            },
+                        });
+                    });
+
+                    break;
+            }
 
             result = $image.cropper(data.method, data.option, data.secondOption);
 
-            // switch (data.method) {
+            switch (data.method) {
             //     case 'rotate':
             //         if (cropped && options.viewMode > 0) {
             //             $image.cropper('crop');
@@ -113,18 +140,18 @@ $(document).ready(function() {
             //         $(this).data('option', -data.option);
             //         break;
             //
-            //     case 'getCroppedCanvas':
-            //         if (result) {
-            //             // Bootstrap's Modal
-            //             $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
-            //
-            //             // if (!$download.hasClass('disabled')) {
-            //             //     download.download = uploadedImageName;
-            //             //     $download.attr('href', result.toDataURL(uploadedImageType));
-            //             // }
-            //         }
-            //
-            //         break;
+                case 'getCroppedCanvas':
+                    if (result) {
+                        // Bootstrap's Modal
+                        $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+
+                        // if (!$download.hasClass('disabled')) {
+                        //     download.download = uploadedImageName;
+                        //     $download.attr('href', result.toDataURL(uploadedImageType));
+                        // }
+                    }
+
+                    break;
             //
             //     case 'destroy':
             //         if (uploadedImageURL) {
@@ -134,7 +161,7 @@ $(document).ready(function() {
             //         }
             //
             //         break;
-            // }
+            }
 
             if ($.isPlainObject(result) && $target) {
                 try {
@@ -146,6 +173,7 @@ $(document).ready(function() {
         }
     });
 
+    // Image upload
     if (URL) {
         $inputImage.change(function () {
             let files = $(this)[0].files;
