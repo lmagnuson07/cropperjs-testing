@@ -114,10 +114,10 @@ $(document).ready(function() {
                             processData: false,
                             contentType: false,
                             success() {
-                                alert('Upload success');
+                                // alert('Upload success');
                             },
                             error() {
-                                alert('Upload error');
+                                // alert('Upload error');
                             },
                         });
                     });
