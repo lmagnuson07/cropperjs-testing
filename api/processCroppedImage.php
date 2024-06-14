@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 //    }
     // Example usage
     $directoryToDelete = '/var/www/html/temp/folderOne';
-    $safeguardPath = 'test';
+    $safeguardPath = '/var/www/html/temp/';
 //    die(json_encode([realpath($directoryToDelete),realpath($safeguardPath)]));
-    die( json_encode(strpos(realpath($directoryToDelete), realpath($safeguardPath))));
+    die( json_encode(strpos($directoryToDelete, $safeguardPath)));
 
     try {
         if (deleteDirectory($directoryToDelete, $safeguardPath)) {
@@ -72,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 function deleteDirectory($dir, $safeguard) {
     // Ensure the directory is within the safeguarded path
-    if (strpos(realpath($dir), realpath($safeguard)) !== 0) {
+    $strPos = strpos($dir, $safeguard);
+    if (!$strPos || $strPos > 0) {
         throw new Exception("The directory is outside the safeguard path.");
     }
 
