@@ -53,20 +53,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 //        echo "No file uploaded";
 //    }
     // Example usage
-    $directoryToDelete = '/var/www/html/temp/folderOne';
-    $safeguardPath = '/var/www/html/temp/';
+//    $directoryToDelete = '/var/www/html/temp/folderOne';
+//    $safeguardPath = '/var/www/html/temp/';
 //    die(json_encode([realpath($directoryToDelete),realpath($safeguardPath)]));
-    die( json_encode(strpos($directoryToDelete, $safeguardPath)));
+//    die( json_encode(strpos($directoryToDelete, $safeguardPath)));
 
-    try {
-        if (deleteDirectory($directoryToDelete, $safeguardPath)) {
-            echo "Directory deleted successfully.";
-        } else {
-            echo "Failed to delete directory.";
-        }
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+//    try {
+//        if (deleteDirectory($directoryToDelete, $safeguardPath)) {
+//            echo "Directory deleted successfully.";
+//        } else {
+//            echo "Failed to delete directory.";
+//        }
+//    } catch (Exception $e) {
+//        echo "Error: " . $e->getMessage();
+//    }
+    $regex = "/^(http|https):\/\/[a-zA-Z0-9-\.]+\.[a-zA-Z]{2,}$/";
+
+    if (preg_match($regex, $_POST['url'])) {
+        echo "Valid URL";
+    } else {
+        echo "Invalid URL";
     }
+    var_dump($_POST);
 } else {
     echo "Invalid request";
 }

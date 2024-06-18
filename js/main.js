@@ -318,4 +318,20 @@ $(document).ready(function() {
     } else {
         $inputImage.prop('disabled', true).parent().addClass('disabled');
     }
+    $('#url').click(function() {
+        $.ajax('/api/processCroppedImage.php', {
+            method: 'POST',
+            data:
+            {
+                url: $('#url').val(),
+            },
+            success() {
+                // Need to replace uploadedImageName and uploadedImageType variables after processing image for download.
+                console.log('EPS Upload success');
+            },
+            error() {
+                console.log('Upload error');
+            },
+        });
+    });
 });
